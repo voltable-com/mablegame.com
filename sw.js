@@ -147,11 +147,8 @@ define(['./workbox-3632007c'], (function (workbox) { 'use strict';
     "url": "humans.txt",
     "revision": "c0c62f629982b1e05bb101814f89df13"
   }, {
-    "url": "img/mable.png",
-    "revision": "66e458704aeaf30480e7e4136c0af13a"
-  }, {
     "url": "/",
-    "revision": "0c6121e3d5f77c4f8c1fad79a79d99c2"
+    "revision": "c08a14cc5fffccf39e520fa0ab748742"
   }, {
     "url": "js/a.js",
     "revision": "abb64a8baaae5976882416ce3c4563be"
