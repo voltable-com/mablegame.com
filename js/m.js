@@ -1,1 +1,167 @@
-const range=(t,e)=>e>t?[t,...range(t+1,e)]:[t];function rnd(t,e){return Math.floor(Math.random()*(e-t+1)+t)}const toggletheme=()=>({init:function(){const t=localStorage.getItem("theme")?localStorage.getItem("theme"):null;t&&(document.documentElement.className=t,"theme-dark"===t&&(this.$refs.toggleTheme.checked=!0))},switchTheme:function(t){t.target.checked?(document.documentElement.className="theme-dark",localStorage.setItem("theme","theme-dark")):(document.documentElement.className="theme-light",localStorage.setItem("theme","theme-light"))}}),mable=()=>({n1:"",n2:"",f:"",x1:[],x2:[],cells:[],c:0,solution:"",ended:!1,wrong:!1,init:function(){this.ended=!1,this.wrong=!1,this.c=0,document.addEventListener("alpine:initialized",(()=>{let t=rnd(1,12400);fetch("/api/"+t+".json").then((t=>t.json())).then((t=>{this.setData(t),this.draw(this.x1,1),this.draw(this.x2,11)}))}))},setData:function(t){let e=JSON.parse(atob(t.data));this.n1=atob(e.n1),this.n2=atob(e.n2),this.f=atob(e.f).split(""),this.x1=Array.from(this.getx1(this.n1,this.n2)),this.x2=Array.from(this.getx1(this.n2,this.n1)),this.cells=Array.from(document.querySelectorAll("#b div"))},checkState:function(){if(0===this.cells.reduce(((t,e)=>"x"===e.innerText?t+1:t),0)){let t=this.multiplicationFounded();this.solution=this.x1[0][0]+" &times; "+this.x1[1][0],this.ended=t,this.wrong=!t}},getp:function(t){return t.reduce(((t,e)=>t+("0"==String(e[0])?"":String(e[0]))),"")},multiplicationFounded:function(){let t=this.cells.reduce(((t,e)=>t+e.innerText),0);return"0"+this.getp(this.x1)+this.getp(this.x2)==t},createInput:function(t){let e=t,n=document.createElement("input");return n.type="number",n.inputMode="numeric",n.pattern="[0-9]*",n.maxLength=1,n.size=1,n.className="input no-spin","x"!==t&&(n.value=t),n.addEventListener("keydown",(t=>{isFinite(t.key)?t.target.parentNode.innerText=t.key:"Delete"===t.key||"Backspace"===t.key||"Process"===t.key?t.target.parentNode.innerText="x":t.target.parentNode.innerText=e,t.target.remove(),this.checkState()})),n.addEventListener("blur",(t=>{t.target.parentNode.innerText=e,t.target.remove()})),n},aclick:function(t){if(t.target.dataset.c&&t.target.dataset.c>=0)if(t.ctrlKey)t.target.innerText=this.f[t.target.dataset.c],this.checkState();else if(!t.target.classList.contains("w")){let e=t.target.innerText;t.target.innerText="";let n=this.createInput(e);t.target.append(n),n.focus()}},getx1:function*(t,e){yield[t,0],yield[e,0];for(let n=e.length,i=n-1;i>=0;i--)yield[String(e[i]*t),n-i-1];yield[String(t*e),0]},draw:function(t,e){t=Array.from(t);let n=0;for(let i=0;i<t.length;i++){let s=t[i][0],r=t[i][1];"0"!==s?(this.drawNumber(s,r,e,n),n+=1):this.c=this.c+1}this.drawLine(n,e)},drawNumber:function(t,e,n,i){for(let s=0,r=t.length;s<r;s++){let t=9*(i+n)+i+n%10+(10-r)-e+s,a=this.f[this.c];this.cells[t].innerText=a,this.cells[t].dataset.c=this.c,"x"!=a&&this.cells[t].classList.add("w"),this.c=this.c+1}},drawLine:function(t,e){for(let n=0;n<10;n++){let i=9*(t-2+e)+t+7+e%10-n;this.cells[i].classList.add("bb")}}});
+const range = (s, e) => e > s ? [s, ...range(s + 1, e)] : [s];
+
+function rnd(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+const toggletheme = () => ({
+  init: function() {
+    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+
+    if (currentTheme) {
+        document.documentElement.className = currentTheme;
+
+        if (currentTheme === 'theme-dark') {
+            this.$refs.toggleTheme.checked = true;
+        }
+    }
+  },
+  switchTheme: function(e) {
+    if (e.target.checked) {
+      document.documentElement.className = 'theme-dark';
+      localStorage.setItem('theme', 'theme-dark');
+    }
+    else {
+      document.documentElement.className = 'theme-light';
+      localStorage.setItem('theme', 'theme-light');
+    }      
+  }
+});
+
+const mable = () => ({
+  n1: '',
+  n2: '',
+  f: '',
+  x1: [],
+  x2: [],
+  cells: [],
+  c:0,
+  solution: '',
+  ended: false,
+  wrong: false,
+  init: function() {
+    this.ended = false;
+    this.wrong = false;
+    this.c = 0;
+    document.addEventListener('alpine:initialized', () => {
+      let id = rnd(1,12400);
+      let apiUrl = "/api/"+id+".json";
+      fetch(apiUrl).then(r => r.json()).then(r => {
+        this.setData(r);
+        this.draw(this.x1, 1);
+        this.draw(this.x2, 11);
+      });
+    });
+  },
+  setData: function(r) {
+    let data = JSON.parse(atob(r.data));
+    this.n1 = atob(data.n1);
+    this.n2 = atob(data.n2);
+    this.f = atob(data.f).split('');
+    this.x1 = Array.from(this.getx1(this.n1, this.n2));
+    this.x2 = Array.from(this.getx1(this.n2, this.n1));
+    this.cells = Array.from(document.querySelectorAll('#b div'));
+},
+  checkState: function() {
+    let cnt = this.cells.reduce((t, x) =>  x.innerText === 'x' ? t+1 : t, 0); 
+    if(cnt === 0) {
+      let founded = this.multiplicationFounded();
+      this.solution = this.x1[0][0] + ' &times; ' + this.x1[1][0];
+      this.ended = founded;
+      this.wrong = !founded;
+    }
+  },
+  getp: function(x1) {
+    return x1.reduce((t, x) =>  t+(String(x[0]) == '0' ? '' : String(x[0])), '');
+  },
+  multiplicationFounded: function() {
+    let solution = this.cells.reduce((t, x) =>  t+x.innerText, 0);
+    let s1 = this.getp(this.x1);
+    let s2 = this.getp(this.x2);
+    return '0'+s1+s2 == solution;
+  },
+  createInput: function(value) {
+    let oldvalue = value;
+    let input = document.createElement('input');
+    input.type = 'number';
+    input.inputMode = 'numeric';
+    input.pattern = '[0-9]*';
+    input.maxLength = 1;
+    input.size = 1;
+    input.className = 'input no-spin';
+    if(value !== 'x') {
+      input.value = value;
+    }
+    input.addEventListener('keydown', e => {
+      if(isFinite(e.key)) {
+        e.target.parentNode.innerText = e.key;
+      } else if(e.key === 'Delete' || e.key === 'Backspace' || e.key === 'Process') {
+        e.target.parentNode.innerText = 'x'; 
+      } else {
+        e.target.parentNode.innerText = oldvalue; 
+      }
+      e.target.remove();
+      this.checkState();
+    });
+    input.addEventListener('blur', e => {
+      e.target.parentNode.innerText = oldvalue; 
+      e.target.remove();
+    });
+    return input;
+  },
+  aclick: function(e) {
+    if(e.target.dataset.c && e.target.dataset.c >= 0) {
+      if(e.ctrlKey) {
+        e.target.innerText = this.f[e.target.dataset.c];
+        this.checkState();
+      } else if(!e.target.classList.contains('w')) {
+        let value = e.target.innerText;
+        e.target.innerText = '';
+        let input = this.createInput(value);
+        e.target.append(input);
+        input.focus();
+      }
+    }
+  },
+  getx1: function*(n1, n2) {
+    yield [n1, 0];
+    yield [n2, 0];
+    for(let n=n2.length, i=n-1;i>=0;i--) {
+      yield [String(n2[i] * n1), n - i - 1];
+    };
+    yield [String(n1 * n2),0];
+  },
+  draw: function(x, pos) {
+    x = Array.from(x);
+    let p = 0;
+    for(let i=0;i<x.length;i++) {
+      let v = x[i][0];
+      let vp = x[i][1];
+      if(v === '0') {
+        this.c = this.c + 1;
+        continue;
+      }
+      this.drawNumber(v, vp, pos, p);
+      p = p + 1;
+    }
+    this.drawLine(p, pos);
+  },
+  drawNumber: function(v, vp, pos, p) {
+    for(let j=0, n=v.length;j<n;j++) {
+      let cpos = (p + pos) * 9 + p + pos % 10+(10-n)-vp+j;
+      let val = this.f[this.c];
+      this.cells[cpos].innerText = val;
+      this.cells[cpos].dataset.c = this.c;
+      if(val != 'x') {
+        this.cells[cpos].classList.add('w');
+      }
+      this.c = this.c + 1;
+    }
+  },
+  drawLine: function(p, pos) {
+    for(let i=0;i<10;i++) {
+      let cpos = (p - 2 + pos) * 9 + p + 7 + pos % 10 - i;
+      this.cells[cpos].classList.add('bb');
+    }
+  },
+});
