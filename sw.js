@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-3632007c'], (function (workbox) { 'use strict';
+define(['./workbox-fc5f5acf'], (function (workbox) { 'use strict';
 
   self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -81,9 +81,6 @@ define(['./workbox-3632007c'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
-    "url": "assets/index.80c36eaf.css",
-    "revision": null
-  }, {
     "url": "favicon-114.png",
     "revision": "66e458704aeaf30480e7e4136c0af13a"
   }, {
@@ -151,7 +148,7 @@ define(['./workbox-3632007c'], (function (workbox) { 'use strict';
     "revision": "66e458704aeaf30480e7e4136c0af13a"
   }, {
     "url": "/",
-    "revision": "c08a14cc5fffccf39e520fa0ab748742"
+    "revision": "f3690ddb7cca1c7ee153d28424ae875a"
   }, {
     "url": "js/a.js",
     "revision": "abb64a8baaae5976882416ce3c4563be"
@@ -167,12 +164,6 @@ define(['./workbox-3632007c'], (function (workbox) { 'use strict';
   }, {
     "url": "favicon.svg",
     "revision": "7536b0eda62e2c06d45a31f1f1ee55c2"
-  }, {
-    "url": "favicon-192.png",
-    "revision": "069749175e678b2ae64a367ec3621668"
-  }, {
-    "url": "favicon-512.png",
-    "revision": "c1869605bdd6c4279bbfac7b51a0d79d"
   }, {
     "url": "manifest.webmanifest",
     "revision": "990637790174d344a964c5d74b32ff89"
